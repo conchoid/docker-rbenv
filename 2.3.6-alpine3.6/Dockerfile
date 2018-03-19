@@ -1,27 +1,21 @@
-FROM ruby:2.3.6-alpine3.4
+FROM ruby:2.4.3-alpine3.6
 
 ENV SETUP_HOME /opt/ruby
 ENV RBENV_ROOT ${SETUP_HOME}/rbenv
 ENV PATH ${RBENV_ROOT}/shims:${RBENV_ROOT}/bin:${PATH}
 
+ENV CONCHOID_DOCKER_RBENV_HOME /conchoid/docker-rbenv
+
+COPY . $CONCHOID_DOCKER_RBENV_HOME
+
+RUN $CONCHOID_DOCKER_RBENV_HOME/install-builddeps.sh
+
 RUN apk add --no-cache --update \
-# rbenv build dependence
-    bash=4.3.42-r5 \
-    git=2.8.6-r0 \
-    make=4.1-r1 \
-    gcc=5.3.0-r0 \
-    libc-dev=0.7-r0 \
-# ruby build dependence 
-    autoconf=2.69-r0 \
-    curl=7.58.0-r0 \
-    bison=3.0.4-r0 \
-    coreutils=8.25-r0 \
-    readline-dev=6.3.008-r4 \
-    linux-headers=4.4.6-r1 \
-    patch=2.7.5-r1 \
-    libffi-dev=3.2.1-r2 \
-    gdbm=1.11-r1 \
-    openssl-dev=1.0.2n-r0
+    bash=4.3.48-r1 \
+    git=2.13.5-r0 \
+    make=4.2.1-r0 \
+    gcc=6.3.0-r4 \
+    libc-dev=0.7.1-r0
 
 # install rbenv
 RUN set -x \
