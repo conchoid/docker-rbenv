@@ -4,7 +4,7 @@ set -eux
 
 apk add --no-cache \
   autoconf=2.69-r0 \
-  curl=7.58.0-r0 \
+  curl=7.59.0-r0 \
   bison=3.0.4-r0 \
   coreutils=8.27-r0 \
   readline-dev=6.3.008-r5 \
