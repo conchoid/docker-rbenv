@@ -12,4 +12,5 @@ apk add --no-cache \
   linux-headers=4.4.6-r2 \
   patch=2.7.5-r3 \
   libffi-dev=3.2.1-r3 \
-  gdbm=1.12-r0
+  gdbm=1.12-r0 \
+  openssl=1.0.2n-r0
