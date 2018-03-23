@@ -2,6 +2,9 @@
 
 set -eux
 
+mkdir -p /var/cache/apk
+ln -s /var/cache/apk /etc/apk/cache
+
 apk add --no-cache \
   autoconf=2.69-r0 \
   curl=7.59.0-r0 \
@@ -14,3 +17,5 @@ apk add --no-cache \
   libffi-dev=3.2.1-r3 \
   gdbm=1.12-r0 \
   openssl=1.0.2n-r0
+
+rm /etc/apk/cache
