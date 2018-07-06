@@ -1,0 +1,30 @@
+FROM ruby:2.4.3-slim-stretch
+
+ENV SETUP_HOME /opt/ruby
+ENV RBENV_ROOT ${SETUP_HOME}/rbenv
+ENV PATH ${RBENV_ROOT}/shims:${RBENV_ROOT}/bin:${PATH}
+
+ENV CONCHOID_DOCKER_RBENV_HOME /conchoid/docker-rbenv
+
+# install build deps
+RUN apt-get update && \
+    apt-get install -y autoconf bison build-essential curl gcc git libffi-dev libgdbm-dev libgdbm3 libncurses5-dev libreadline6-dev libssl1.0-dev libyaml-dev make zlib1g-dev
+
+# install rbenv
+RUN set -x \
+    && RBENV_VERSION="v1.1.1" \
+    && git clone https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" \
+    && cd "${RBENV_ROOT}" \
+    && git checkout "${RBENV_VERSION}" \
+    && src/configure && make -C src \
+    && rm -rf .git
+
+# install ruby-build
+RUN set -x \
+    && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
+    && RUBY_BUILD_VERSION="v20171215" \
+    && mkdir -p "${RBENV_ROOT}/plugins" \
+    && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
+    && cd "${RUBY_BUILD_DIR}" \
+    && git checkout "${RUBY_BUILD_VERSION}" \
+    && rm -rf .git
