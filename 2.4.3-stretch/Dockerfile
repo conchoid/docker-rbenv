@@ -28,3 +28,12 @@ RUN set -x \
     && cd "${RUBY_BUILD_DIR}" \
     && git checkout "${RUBY_BUILD_VERSION}" \
     && rm -rf .git
+
+# install runtimes and bundler
+RUN unset GEM_HOME && \
+  for version in "2.2.9" "2.3.6" "2.4.3"; do \
+    rbenv install "${version}" && \
+    rbenv global "${version}" && \
+    gem install bundler; \
+  done; \
+  rbenv global system
