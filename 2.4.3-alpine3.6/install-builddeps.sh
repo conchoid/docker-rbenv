@@ -7,8 +7,9 @@ ln -s /var/cache/apk /etc/apk/cache
 
 apk add --no-cache \
   autoconf=2.69-r0 \
-  curl=7.59.0-r0 \
-  libcurl=7.59.0-r0 \
+  curl=7.61.0-r0 \
+  curl-dev=7.61.0-r0 \
+  libcurl=7.61.0-r0 \
   bison=3.0.4-r0 \
   coreutils=8.27-r0 \
   readline-dev=6.3.008-r5 \
@@ -16,6 +17,6 @@ apk add --no-cache \
   patch=2.7.5-r3 \
   libffi-dev=3.2.1-r3 \
   gdbm=1.12-r0 \
-  openssl=1.0.2n-r0
+  openssl=1.0.2o-r1
 
 rm /etc/apk/cache

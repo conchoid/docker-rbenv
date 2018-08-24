@@ -12,7 +12,7 @@ RUN $CONCHOID_DOCKER_RBENV_HOME/install-builddeps.sh
 
 RUN apk add --no-cache --update \
     bash=4.3.48-r1 \
-    git=2.13.5-r0 \
+    git=2.13.7-r0 \
     make=4.2.1-r0 \
     gcc=6.3.0-r4 \
     libc-dev=0.7.1-r0
