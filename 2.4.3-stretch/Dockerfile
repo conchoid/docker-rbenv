@@ -6,9 +6,15 @@ ENV PATH ${RBENV_ROOT}/shims:${RBENV_ROOT}/bin:${PATH}
 
 ENV CONCHOID_DOCKER_RBENV_HOME /conchoid/docker-rbenv
 
-# install build deps
-RUN apt-get update && \
-    apt-get install -y autoconf bison build-essential curl gcc git libffi-dev libgdbm-dev libgdbm3 libncurses5-dev libreadline6-dev libssl1.0-dev libyaml-dev make zlib1g-dev
+# install build deps and set locale
+RUN apt-get update \
+    && apt-get install -y autoconf bison build-essential curl gcc git libffi-dev libgdbm-dev libgdbm3 libncurses5-dev libreadline6-dev libssl1.0-dev libyaml-dev make zlib1g-dev locales \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # install rbenv
 RUN set -x \
