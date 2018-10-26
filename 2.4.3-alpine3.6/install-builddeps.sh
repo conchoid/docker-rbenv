@@ -7,9 +7,9 @@ ln -s /var/cache/apk /etc/apk/cache
 
 apk add --no-cache \
   autoconf=2.69-r0 \
-  curl=7.61.0-r0 \
-  curl-dev=7.61.0-r0 \
-  libcurl=7.61.0-r0 \
+  curl=7.61.1-r0 \
+  curl-dev=7.61.1-r0 \
+  libcurl=7.61.1-r0 \
   bison=3.0.4-r0 \
   coreutils=8.27-r0 \
   readline-dev=6.3.008-r5 \
