@@ -1,4 +1,4 @@
-FROM ruby:2.6.0-slim-stretch
+FROM ruby:2.6.2-slim-stretch
 
 ENV SETUP_HOME /opt/ruby
 ENV RBENV_ROOT ${SETUP_HOME}/rbenv
@@ -32,7 +32,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # install rbenv
-RUN RBENV_VERSION="v1.1.1" \
+RUN RBENV_VERSION="v1.1.2" \
   && git clone https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" \
   && cd "${RBENV_ROOT}" \
   && git checkout "${RBENV_VERSION}" \
@@ -40,8 +40,8 @@ RUN RBENV_VERSION="v1.1.1" \
   && rm -rf .git
 
 # install ruby-build
-RUN RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
-  && RUBY_BUILD_VERSION="v20181225" \
+RUN RUBY_BUILD_VERSION="v20190401" \
+  && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
   && mkdir -p "${RBENV_ROOT}/plugins" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
   && cd "${RUBY_BUILD_DIR}" \
@@ -52,7 +52,7 @@ RUN RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
 # Newer version of Bundler2.x is also available but it does not support ruby2.2 and lower version anymore.
 RUN BUNDLER_VERSION="1.17.0" \
   && unset GEM_HOME \
-  && for version in "2.2.10" "2.3.8" "2.4.5" "2.5.3" "2.6.0"; do \
+  && for version in "2.2.10" "2.3.8" "2.4.6" "2.5.5" "2.6.2"; do \
     rbenv install "${version}" \
     && rbenv global "${version}" \
     && gem install bundler -v ${BUNDLER_VERSION} \
