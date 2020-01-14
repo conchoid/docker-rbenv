@@ -1,4 +1,4 @@
-FROM ruby:2.6.2-slim-stretch
+FROM ruby:2.6.5-slim-stretch
 
 ENV SETUP_HOME /opt/ruby
 ENV RBENV_ROOT ${SETUP_HOME}/rbenv
@@ -40,7 +40,7 @@ RUN RBENV_VERSION="v1.1.2" \
   && rm -rf .git
 
 # install ruby-build
-RUN RUBY_BUILD_VERSION="v20190401" \
+RUN RUBY_BUILD_VERSION="v20191225" \
   && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
   && mkdir -p "${RBENV_ROOT}/plugins" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
@@ -50,11 +50,14 @@ RUN RUBY_BUILD_VERSION="v20190401" \
 
 # install runtimes and bundler
 # Newer version of Bundler2.x is also available but it does not support ruby2.2 and lower version anymore.
-RUN BUNDLER_VERSION="1.17.0" \
+RUN BUNDLER_VERSION="1.17.3" \
+  && BUNDLER2_VERSION="2.1.4" \
   && unset GEM_HOME \
-  && for version in "2.2.10" "2.3.8" "2.4.6" "2.5.5" "2.6.2"; do \
+  && for version in "2.3.8" "2.4.9" "2.5.7" "2.6.5" "2.7.0"; do \
     rbenv install "${version}" \
     && rbenv global "${version}" \
     && gem install bundler -v ${BUNDLER_VERSION} \
+    && if [ "${version}" = "2.3.8" ] || [ "${version}" = "2.4.9" ] || [ "${version}" = "2.5.7" ] ; then \
+    gem install bundler -v ${BUNDLER2_VERSION} ; fi \
   ; done \
   && rbenv global system
