@@ -57,7 +57,9 @@ RUN BUNDLER_VERSION="1.17.3" \
     rbenv install "${version}" \
     && rbenv global "${version}" \
     && gem install bundler -v ${BUNDLER_VERSION} \
-    && if [ "${version}" = "2.3.8" ] || [ "${version}" = "2.4.9" ] || [ "${version}" = "2.5.7" ] ; then \
+    && if [ "${version}" = "2.3.8" ] || [ "${version}" = "2.4.9" ] || [ "${version}" = "2.5.7" ] || [ "${version}" = "2.6.5" ] ; then \
     gem install bundler -v ${BUNDLER2_VERSION} ; fi \
   ; done \
-  && rbenv global system
+  && rbenv global system \
+  # System version(ruby2.6.5) comes with bundler 1.17.2 pre-installed, but not 2.x.
+  && gem install bundler -v ${BUNDLER2_VERSION}
