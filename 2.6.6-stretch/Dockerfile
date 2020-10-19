@@ -53,11 +53,11 @@ RUN RUBY_BUILD_VERSION="v20201005" \
 RUN BUNDLER_VERSION="1.17.3" \
   && BUNDLER2_VERSION="2.1.4" \
   && unset GEM_HOME \
-  && for version in "2.4.9" "2.5.8" "2.6.6" "2.7.2"; do \
+  && for version in "2.4.10" "2.5.8" "2.6.6" "2.7.2"; do \
     rbenv install "${version}" \
     && rbenv global "${version}" \
     && gem install bundler -v ${BUNDLER_VERSION} \
-    && if [ "${version}" = "2.4.9" ] || [ "${version}" = "2.5.8" ] || [ "${version}" = "2.6.6" ] ; then \
+    && if [ "${version}" = "2.4.10" ] || [ "${version}" = "2.5.8" ] || [ "${version}" = "2.6.6" ] ; then \
     gem install bundler -v ${BUNDLER2_VERSION} ; fi \
   ; done \
   && rbenv global system \
