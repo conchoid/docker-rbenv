@@ -1,4 +1,4 @@
-FROM ruby:2.6.5-slim-stretch
+FROM ruby:2.6.6-slim-stretch
 
 ENV SETUP_HOME /opt/ruby
 ENV RBENV_ROOT ${SETUP_HOME}/rbenv
@@ -40,7 +40,7 @@ RUN RBENV_VERSION="v1.1.2" \
   && rm -rf .git
 
 # install ruby-build
-RUN RUBY_BUILD_VERSION="v20191225" \
+RUN RUBY_BUILD_VERSION="v20201005" \
   && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
   && mkdir -p "${RBENV_ROOT}/plugins" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
@@ -53,13 +53,13 @@ RUN RUBY_BUILD_VERSION="v20191225" \
 RUN BUNDLER_VERSION="1.17.3" \
   && BUNDLER2_VERSION="2.1.4" \
   && unset GEM_HOME \
-  && for version in "2.3.8" "2.4.9" "2.5.7" "2.6.5" "2.7.0"; do \
+  && for version in "2.4.10" "2.5.8" "2.6.6" "2.7.2"; do \
     rbenv install "${version}" \
     && rbenv global "${version}" \
     && gem install bundler -v ${BUNDLER_VERSION} \
-    && if [ "${version}" = "2.3.8" ] || [ "${version}" = "2.4.9" ] || [ "${version}" = "2.5.7" ] || [ "${version}" = "2.6.5" ] ; then \
+    && if [ "${version}" = "2.4.10" ] || [ "${version}" = "2.5.8" ] || [ "${version}" = "2.6.6" ] ; then \
     gem install bundler -v ${BUNDLER2_VERSION} ; fi \
   ; done \
   && rbenv global system \
-  # System version(ruby2.6.5) comes with bundler 1.17.2 pre-installed, but not 2.x.
+  # System version(ruby2.6.6) comes with bundler 1.17.2 pre-installed, but not 2.x.
   && gem install bundler -v ${BUNDLER2_VERSION}
