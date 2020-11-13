@@ -59,6 +59,8 @@ RUN BUNDLER_VERSION="1.17.3" \
     && gem install bundler -v ${BUNDLER_VERSION} \
     && if [ "${version}" = "2.4.10" ] || [ "${version}" = "2.5.8" ] || [ "${version}" = "2.6.6" ] ; then \
     gem install bundler -v ${BUNDLER2_VERSION} ; fi \
+    && rm -rf ${RBENV_ROOT}/versions/${version}/share \
+    && ls -1d ${RBENV_ROOT}/versions/${version}/lib/ruby/gems/2.*/doc | xargs rm -rf \
   ; done \
   && rbenv global system \
   # System version(ruby2.6.6) comes with bundler 1.17.2 pre-installed, but not 2.x.
