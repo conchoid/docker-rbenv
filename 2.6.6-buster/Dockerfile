@@ -1,10 +1,8 @@
 FROM ruby:2.6.6-slim-buster
 
-ENV SETUP_HOME /opt/ruby
-ENV RBENV_ROOT ${SETUP_HOME}/rbenv
+ENV ROCRO_SETUP_HOME /opt/ruby
+ENV RBENV_ROOT ${ROCRO_SETUP_HOME}/rbenv
 ENV PATH ${RBENV_ROOT}/shims:${RBENV_ROOT}/bin:${PATH}
-
-ENV CONCHOID_DOCKER_RBENV_HOME /conchoid/docker-rbenv
 
 # install build deps and set locale
 RUN apt-get update && apt-get install -y \
@@ -47,6 +45,7 @@ RUN RUBY_BUILD_VERSION="v20201005" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
   && cd "${RUBY_BUILD_DIR}" \
   && git checkout "${RUBY_BUILD_VERSION}" \
+  && ./install.sh \
   && rm -rf .git
 
 # install runtimes and bundler
