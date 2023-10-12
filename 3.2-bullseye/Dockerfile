@@ -54,6 +54,7 @@ RUN RUBY_BUILD_VERSION="v20230615" \
 # install runtimes and bundler
 RUN BUNDLER2_VERSION="2.4.15" \
   && unset GEM_HOME \
+  && gem install bundler -v ${BUNDLER2_VERSION} \
   && for version in "2.7.8" "3.0.6" "3.1.4" "3.2.2"; do \
     rbenv install "${version}" \
     && rbenv global "${version}" \
