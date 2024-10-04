@@ -1,4 +1,4 @@
-FROM ruby:3.3.0-slim-bookworm
+FROM ruby:3.3.5-slim-bookworm
 
 ENV ROCRO_SETUP_HOME /opt/ruby
 ENV RBENV_ROOT ${ROCRO_SETUP_HOME}/rbenv
@@ -34,7 +34,7 @@ ENV LC_ALL en_US.UTF-8
 ENV RUBYOPT -EUTF-8
 
 # install rbenv
-RUN RBENV_VERSION="v1.2.0" \
+RUN RBENV_VERSION="v1.3.0" \
   && git clone https://github.com/rbenv/rbenv.git "${RBENV_ROOT}" \
   && cd "${RBENV_ROOT}" \
   && git checkout "${RBENV_VERSION}" \
@@ -42,7 +42,7 @@ RUN RBENV_VERSION="v1.2.0" \
   && rm -rf .git
 
 # install ruby-build
-RUN RUBY_BUILD_VERSION="v20240319" \
+RUN RUBY_BUILD_VERSION="v20240917" \
   && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
   && mkdir -p "${RBENV_ROOT}/plugins" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
@@ -55,7 +55,7 @@ RUN RUBY_BUILD_VERSION="v20240319" \
 RUN BUNDLER2_VERSION="2.4.22" \
   && unset GEM_HOME \
   && gem install bundler -v ${BUNDLER2_VERSION} \
-  && for version in "3.0.6" "3.1.4" "3.2.3" "3.3.0"; do \
+  && for version in "3.0.7" "3.1.6" "3.2.5" "3.3.5"; do \
     rbenv install "${version}" \
     && rbenv global "${version}" \
     && gem install bundler -v ${BUNDLER2_VERSION} \
