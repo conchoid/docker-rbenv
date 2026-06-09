@@ -1,58 +1,127 @@
-# Dockerfile ベースイメージ更新手順
+# 4.0-trixie 更新手順
 
-## 概要
-docker-rbenv/3.3-bookworm/Dockerfileのベースイメージを `ruby:3.3.5-slim-bookworm` (Debian 12) から `ruby:3.3.10-slim-trixie` (Debian 13) に更新する。
+更新日: 2026-04-01
 
-## 更新手順
+## 1. ベースディレクトリを複製
 
-### 1. ベースイメージの更新
-Dockerfileの1行目を以下のように変更する：
-
-**変更前:**
-```dockerfile
-FROM ruby:3.3.5-slim-bookworm
-```
-
-**変更後:**
-```dockerfile
-FROM ruby:3.3.10-slim-trixie
-```
-
-**注意:** `ruby:3.3.5-slim-trixie` タグが存在しないため、`ruby:3.3.10-slim-trixie` を使用する。
-
-### 2. 動作確認
-以下のコマンドでDockerイメージをビルドし、正常に動作することを確認する：
+`3.3-trixie` を複製して `4.0-trixie` を作成した。
 
 ```bash
-cd docker-rbenv
-docker build -t conchoid/docker-rbenv:v1.3.2-1-3.3.10-trixie -f 3.3-trixie/Dockerfile .
+cp -a /home/oik/go/src/github.com/conchoid/docker-rbenv/3.3-trixie \
+  /home/oik/go/src/github.com/conchoid/docker-rbenv/4.0-trixie
 ```
 
-**注意:** rbenvのバージョンはv1.3.2を使用する。
+## 2. 採用したバージョン
 
-### 3. 互換性チェック
-Debian 13への更新により、以下の点を確認する：
+- ベースイメージ: `ruby:4.0.2-slim-trixie`
+- `RBENV_VERSION`: `v1.3.2`
+- `RUBY_BUILD_VERSION`: `v20260327`
+- `bundler`: `4.0.9`
+- プレインストール Ruby:
+- `3.2.11`
+- `3.3.11`
+- `3.4.9`
 
-- パッケージの互換性（apt-getでインストールしているパッケージが利用可能か）
-- rbenvの動作確認
-- ruby-buildの動作確認
-- Ruby各バージョン（3.0.7, 3.1.7, 3.2.9, 3.3.10）のインストール確認
-- bundlerのインストール確認
-- ロケール設定の確認
-- libssl1.0-devのインストール確認（Ubuntu bionic-securityリポジトリからの取得）
+## 3. バージョン確認の根拠
 
-### 4. テスト実行
-実際のRubyプロジェクトでイメージを使用し、以下を確認する：
+### Ruby 系列のメンテナンス状況
 
-- ビルドが正常に完了するか
-- 依存関係の解決が正常に行われるか
-- 実行時エラーが発生しないか
-- rbenvによるRubyバージョン切り替えが正常に動作するか
+Ruby 公式の Maintenance Branches を確認し、2026-04-01 時点で EOL から 1 年を超えていない系列、またはまだサポート中の系列として `3.2`, `3.3`, `3.4` を採用した。
 
-## 注意事項
-- Debian 13 (trixie) は比較的新しいリリースのため、一部のパッケージやツールのバージョンが変更されている可能性がある
-- 問題が発生した場合は、パッケージのバージョン指定や代替パッケージの検討が必要になる場合がある
-- **apt-getでインストールしているライブラリは必要なライブラリなので、trixieでもインストールを行う必要がある**
-- libssl1.0-devはUbuntu bionic-securityリポジトリから取得しているため、trixieでも同様の設定が必要か確認すること
-- ビルド後は、rbenv、ruby-build、各Rubyバージョン、bundlerが正常にインストールされていることを確認すること
+- Ruby 3.2: `security maintenance`, EOL は `2026-03-31 (expected)`
+- Ruby 3.3: `normal maintenance`
+- Ruby 3.4: `normal maintenance`
 
+最新メンテナンス版は Ruby Releases から確認した。
+
+- `3.2.11`
+- `3.3.11`
+- `3.4.9`
+- ベース用 `4.0.2`
+
+確認 URL:
+
+- https://www.ruby-lang.org/en/downloads/branches/
+- https://www.ruby-lang.org/en/downloads/releases/
+
+### bundler
+
+RubyGems の `bundler` バージョン一覧 API を確認し、最新安定版は `4.0.9`、required Ruby version は `>= 3.2.0` だった。今回プレインストールする `3.2`, `3.3`, `3.4` とベースの `4.0.2` で共通利用可能な最新版として `4.0.9` を採用した。
+
+確認 URL:
+
+- https://rubygems.org/gems/bundler/versions/
+- https://rubygems.org/api/v1/versions/bundler.json
+
+### ruby-build
+
+GitHub Releases の latest を確認し、`ruby-build` の最新は `v20260327` だった。
+
+確認 URL:
+
+- https://github.com/rbenv/ruby-build
+- https://api.github.com/repos/rbenv/ruby-build/releases/latest
+
+### rbenv
+
+GitHub Releases の latest を確認し、`rbenv` の最新は `v1.3.2` だった。
+
+確認 URL:
+
+- https://github.com/rbenv/rbenv.git
+- https://api.github.com/repos/rbenv/rbenv/releases/latest
+
+## 4. Dockerfile の変更内容
+
+`/home/oik/go/src/github.com/conchoid/docker-rbenv/4.0-trixie/Dockerfile` を更新した。
+
+- `FROM ruby:4.0.2-slim-trixie` に変更
+- `RUBY_BUILD_VERSION` を `v20260327` に更新
+- `bundler` を `4.0.9` に更新
+- プレインストール Ruby を `3.2.11`, `3.3.11`, `3.4.9` に更新
+- 今回の対象 Ruby では不要なため、旧 `libssl1.0-dev` 追加設定を削除
+
+## 5. タグ番号の決定
+
+Docker Hub のタグ一覧を確認した。
+
+- 既存タグに `v1.3.2-1-4.0.2-trixie` は存在しなかった
+- そのため連番は `1` を採用
+
+確認 URL:
+
+- https://hub.docker.com/repository/docker/conchoid/docker-rbenv/tags
+- https://hub.docker.com/v2/repositories/conchoid/docker-rbenv/tags?page_size=100
+
+採用タグ:
+
+```text
+conchoid/docker-rbenv:v1.3.2-1-4.0.2-trixie
+```
+
+## 6. ビルド
+
+以下でビルドを実施した。
+
+```bash
+docker build -t conchoid/docker-rbenv:v1.3.2-1-4.0.2-trixie \
+  /home/oik/go/src/github.com/conchoid/docker-rbenv/4.0-trixie
+```
+
+ビルド結果:
+
+- 成功
+- image id: `sha256:541ff83ef5a01d467092e5151fae48d953e3a49e0b55c834ad17a44c48b1195f`
+
+ローカル確認:
+
+```bash
+docker images --format '{{.Repository}}:{{.Tag}} {{.ID}} {{.Size}}' | \
+  rg '^conchoid/docker-rbenv:v1\.3\.2-1-4\.0\.2-trixie '
+```
+
+確認結果:
+
+```text
+conchoid/docker-rbenv:v1.3.2-1-4.0.2-trixie 541ff83ef5a0 789MB
+```
