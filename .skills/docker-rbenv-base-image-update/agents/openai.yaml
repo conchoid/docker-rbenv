@@ -1,0 +1,7 @@
+interface:
+  display_name: "Docker Rbenv Base Image Update"
+  short_description: "docker-rbenv の Ruby/OS 更新手順"
+  default_prompt: "Use $docker-rbenv-base-image-update to add or update a docker-rbenv image for a new Ruby release and Debian suite."
+
+policy:
+  allow_implicit_invocation: true

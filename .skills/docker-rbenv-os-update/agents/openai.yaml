@@ -1,0 +1,7 @@
+interface:
+  display_name: "Docker Rbenv OS Update"
+  short_description: "docker-rbenv の既存系統 OS 更新手順"
+  default_prompt: "Use $docker-rbenv-os-update to migrate an existing docker-rbenv Ruby line from one Debian suite to another."
+
+policy:
+  allow_implicit_invocation: true
