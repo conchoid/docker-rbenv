@@ -1,3 +1,4 @@
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-3.3.10-trixie
 FROM ruby:3.3.10-slim-trixie
 
 ENV ROCRO_SETUP_HOME /opt/ruby

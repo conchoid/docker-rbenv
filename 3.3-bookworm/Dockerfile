@@ -1,3 +1,4 @@
+# Docker Hub: conchoid/docker-rbenv:v1.3.0-1-3.3.5-bookworm
 FROM ruby:3.3.5-slim-bookworm
 
 ENV ROCRO_SETUP_HOME /opt/ruby
