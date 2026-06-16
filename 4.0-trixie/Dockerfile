@@ -63,6 +63,3 @@ RUN BUNDLER_VERSION="4.0.9" \
   ; done \
   && rbenv global system
 
-RUN groupadd -r rbenv && useradd -r -g rbenv -d ${ROCRO_SETUP_HOME} rbenv \
-  && chown -R rbenv:rbenv ${ROCRO_SETUP_HOME}
-USER rbenv
