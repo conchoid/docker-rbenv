@@ -1,5 +1,5 @@
-# Docker Hub: conchoid/docker-rbenv:v1.3.2-2-4.0.2-trixie
-FROM ruby:4.0.2-slim-trixie
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.5-trixie
+FROM ruby:4.0.5-slim-trixie
 
 ENV ROCRO_SETUP_HOME=/opt/ruby
 ENV RBENV_ROOT=${ROCRO_SETUP_HOME}/rbenv
@@ -41,7 +41,7 @@ RUN RBENV_VERSION="v1.3.2" \
   && rm -rf .git
 
 # install ruby-build
-RUN RUBY_BUILD_VERSION="v20260327" \
+RUN RUBY_BUILD_VERSION="v20260616" \
   && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
   && mkdir -p "${RBENV_ROOT}/plugins" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
@@ -50,16 +50,47 @@ RUN RUBY_BUILD_VERSION="v20260327" \
   && ./install.sh \
   && rm -rf .git
 
-# install runtimes and bundler
+# install runtimes and patched default gems
 RUN BUNDLER_VERSION="4.0.9" \
-  && unset GEM_HOME \
-  && gem install bundler -v ${BUNDLER_VERSION} \
-  && for version in "3.2.11" "3.3.11" "3.4.9"; do \
+  && JSON_VERSION="2.19.2" \
+  && NET_IMAP_VERSION="0.6.4" \
+  && unset GEM_HOME GEM_PATH BUNDLE_APP_CONFIG BUNDLE_PATH BUNDLE_BIN \
+  && rbenv global system \
+  && install_runtime_gems() { \
+    local_gem="gem" \
+    && local_ruby="ruby" \
+    && if [ -e "${RBENV_ROOT}/shims/gem" ]; then \
+      local_gem="${RBENV_ROOT}/shims/gem" \
+      && local_ruby="${RBENV_ROOT}/shims/ruby"; \
+    fi \
+    && "${local_gem}" install bundler -v "${BUNDLER_VERSION}" --no-document \
+    && "${local_gem}" install json -v "${JSON_VERSION}" --no-document \
+    && "${local_gem}" install net-imap -v "${NET_IMAP_VERSION}" --no-document \
+    && GEM_DEFAULT_DIR="$("${local_ruby}" -e 'print Gem.default_dir')" \
+    && RUBY_LIBDIR="$("${local_ruby}" -e 'print RbConfig::CONFIG["rubylibdir"]')" \
+    && RUBY_ARCHDIR="$("${local_ruby}" -e 'print RbConfig::CONFIG["rubyarchdir"]')" \
+    && JSON_GEM_DIR="${GEM_DEFAULT_DIR}/gems/json-${JSON_VERSION}" \
+    && JSON_EXT_DIR="$("${local_ruby}" -e 'print Gem::Specification.find_by_name("json", "= 2.19.2").extension_dir')" \
+    && cp "${JSON_GEM_DIR}/lib/json.rb" "${RUBY_LIBDIR}/json.rb" \
+    && rm -rf "${RUBY_LIBDIR}/json" \
+    && cp -a "${JSON_GEM_DIR}/lib/json" "${RUBY_LIBDIR}/json" \
+    && mkdir -p "${RUBY_ARCHDIR}/json/ext" \
+    && cp "${JSON_EXT_DIR}/json/ext/parser.so" "${RUBY_ARCHDIR}/json/ext/parser.so" \
+    && cp "${JSON_EXT_DIR}/json/ext/generator.so" "${RUBY_ARCHDIR}/json/ext/generator.so" \
+    && rm -f "${GEM_DEFAULT_DIR}/specifications/default"/json-*.gemspec \
+    && find "${GEM_DEFAULT_DIR}/specifications" -maxdepth 1 -type f -name 'json-*.gemspec' ! -name "json-${JSON_VERSION}.gemspec" -delete \
+    && find "${GEM_DEFAULT_DIR}/specifications" -maxdepth 1 -type f -name 'net-imap-*.gemspec' ! -name "net-imap-${NET_IMAP_VERSION}.gemspec" -delete \
+    && find "${GEM_DEFAULT_DIR}/gems" -maxdepth 1 -type d -name 'json-*' ! -name "json-${JSON_VERSION}" -exec rm -rf {} + \
+    && find "${GEM_DEFAULT_DIR}/gems" -maxdepth 1 -type d -name 'net-imap-*' ! -name "net-imap-${NET_IMAP_VERSION}" -exec rm -rf {} +; \
+  } \
+  && install_runtime_gems \
+  && for version in "3.2.11" "3.3.11" "3.4.9" "4.0.5"; do \
     rbenv install "${version}" \
     && rbenv global "${version}" \
-    && gem install bundler -v ${BUNDLER_VERSION} \
+    && export RBENV_VERSION="${version}" \
+    && install_runtime_gems \
+    && unset RBENV_VERSION \
     && rm -rf ${RBENV_ROOT}/versions/${version}/share \
-    && ls -1d ${RBENV_ROOT}/versions/${version}/lib/ruby/gems/3.*/doc | xargs rm -rf \
+    && ls -1d ${RBENV_ROOT}/versions/${version}/lib/ruby/gems/*/doc | xargs rm -rf \
   ; done \
   && rbenv global system
-
