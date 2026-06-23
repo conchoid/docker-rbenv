@@ -84,13 +84,22 @@ RUN BUNDLER_VERSION="4.0.9" \
     && find "${GEM_DEFAULT_DIR}/gems" -maxdepth 1 -type d -name 'net-imap-*' ! -name "net-imap-${NET_IMAP_VERSION}" -exec rm -rf {} +; \
   } \
   && install_runtime_gems \
+  # NOTE: rbenv install does not include the system version 4.0.5.
+  # System version 4.0.5 uses a symbolic link in /usr/local/.
   && for version in "3.2.11" "3.3.11" "3.4.9" "4.0.5"; do \
-    rbenv install "${version}" \
-    && rbenv global "${version}" \
-    && export RBENV_VERSION="${version}" \
-    && install_runtime_gems \
-    && unset RBENV_VERSION \
-    && rm -rf ${RBENV_ROOT}/versions/${version}/share \
-    && ls -1d ${RBENV_ROOT}/versions/${version}/lib/ruby/gems/*/doc | xargs rm -rf \
+    if [ "${version}" = "4.0.5" ] ; then \
+      ln -sf "/usr/local/" "${RBENV_ROOT}/versions/${version}" \
+      && export RBENV_VERSION="${version}" \
+      && install_runtime_gems \
+      && unset RBENV_VERSION; \
+    else \
+      rbenv install "${version}" \
+      && rbenv global "${version}" \
+      && export RBENV_VERSION="${version}" \
+      && install_runtime_gems \
+      && unset RBENV_VERSION \
+      && rm -rf ${RBENV_ROOT}/versions/${version}/share \
+      && ls -1d ${RBENV_ROOT}/versions/${version}/lib/ruby/gems/*/doc | xargs rm -rf; \
+    fi \
   ; done \
   && rbenv global system
