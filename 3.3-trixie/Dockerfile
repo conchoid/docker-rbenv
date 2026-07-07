@@ -1,11 +1,12 @@
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-2-3.3.10-trixie
 FROM ruby:3.3.10-slim-trixie
 
-ENV ROCRO_SETUP_HOME /opt/ruby
-ENV RBENV_ROOT ${ROCRO_SETUP_HOME}/rbenv
-ENV PATH ${RBENV_ROOT}/shims:${RBENV_ROOT}/bin:${PATH}
+ENV ROCRO_SETUP_HOME=/opt/ruby
+ENV RBENV_ROOT=${ROCRO_SETUP_HOME}/rbenv
+ENV PATH=${RBENV_ROOT}/shims:${RBENV_ROOT}/bin:${PATH}
 
 # install build deps and set locale
-RUN apt-get update --allow-releaseinfo-change && apt-get install -y \
+RUN apt-get update --allow-releaseinfo-change && apt-get upgrade -y && apt-get install -y --no-install-recommends \
       autoconf \
       bison \
       bzip2 \
@@ -26,15 +27,10 @@ RUN apt-get update --allow-releaseinfo-change && apt-get install -y \
   && apt-get clean && rm -rf /var/lib/apt/lists/* \
   && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
-RUN echo "deb http://security.ubuntu.com/ubuntu bionic-security main" > /etc/apt/sources.list.d/bionic-security.list \
-    && curl -fsSL http://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x3B4FE6ACC0B21F32 | gpg --dearmor -o /etc/apt/trusted.gpg.d/ubuntu-bionic.gpg \
-    && apt-get update && apt-cache policy libssl1.0-dev && apt-get install -y libssl1.0-dev \
-    && rm -f /etc/apt/sources.list.d/bionic-security.list /etc/apt/trusted.gpg.d/ubuntu-bionic.gpg
-
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-ENV RUBYOPT -EUTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV RUBYOPT=-EUTF-8
 
 # install rbenv
 RUN RBENV_VERSION="v1.3.2" \
