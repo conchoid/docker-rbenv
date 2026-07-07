@@ -86,7 +86,7 @@ RUN BUNDLER_VERSION="4.0.9" \
   && install_runtime_gems \
   # NOTE: rbenv install does not include the system version 4.0.5.
   # System version 4.0.5 uses a symbolic link in /usr/local/.
-  && for version in "3.2.11" "3.3.11" "3.4.9" "4.0.5"; do \
+  && for version in "3.3.11" "3.4.9" "4.0.5"; do \
     if [ "${version}" = "4.0.5" ] ; then \
       ln -sf "/usr/local/" "${RBENV_ROOT}/versions/${version}" \
       && export RBENV_VERSION="${version}" \
