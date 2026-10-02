@@ -12,6 +12,7 @@ RUN apt-get update --allow-releaseinfo-change && apt-get upgrade -y && apt-get i
       bison \
       bzip2 \
       build-essential \
+      connect-proxy \
       curl \
       gcc \
       git \
