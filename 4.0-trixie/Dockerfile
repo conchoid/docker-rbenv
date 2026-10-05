@@ -1,6 +1,6 @@
-# Docker Hub: conchoid/docker-rbenv:v1.3.2-2-4.0.5-trixie
-# Docker Hub: conchoid/docker-rbenv:v1.3.2-2-4.0.5-trixie-arm64
-FROM ruby:4.0.5-slim-trixie
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.7-trixie
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.7-trixie-arm64
+FROM ruby:4.0.7-slim-trixie
 
 ENV ROCRO_SETUP_HOME=/opt/ruby
 ENV RBENV_ROOT=${ROCRO_SETUP_HOME}/rbenv
@@ -12,6 +12,7 @@ RUN apt-get update --allow-releaseinfo-change && apt-get upgrade -y && apt-get i
       bison \
       bzip2 \
       build-essential \
+      connect-proxy \
       curl \
       gcc \
       git \
@@ -42,7 +43,7 @@ RUN RBENV_VERSION="v1.3.2" \
   && rm -rf .git
 
 # install ruby-build
-RUN RUBY_BUILD_VERSION="v20260616" \
+RUN RUBY_BUILD_VERSION="v20260924" \
   && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
   && mkdir -p "${RBENV_ROOT}/plugins" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
@@ -52,7 +53,7 @@ RUN RUBY_BUILD_VERSION="v20260616" \
   && rm -rf .git
 
 # install runtimes and patched default gems
-RUN BUNDLER_VERSION="4.0.9" \
+RUN BUNDLER_VERSION="4.0.22" \
   && JSON_VERSION="2.19.2" \
   && NET_IMAP_VERSION="0.6.4" \
   && unset GEM_HOME GEM_PATH BUNDLE_APP_CONFIG BUNDLE_PATH BUNDLE_BIN \
@@ -85,10 +86,10 @@ RUN BUNDLER_VERSION="4.0.9" \
     && find "${GEM_DEFAULT_DIR}/gems" -maxdepth 1 -type d -name 'net-imap-*' ! -name "net-imap-${NET_IMAP_VERSION}" -exec rm -rf {} +; \
   } \
   && install_runtime_gems \
-  # NOTE: rbenv install does not include the system version 4.0.5.
-  # System version 4.0.5 uses a symbolic link in /usr/local/.
-  && for version in "3.3.11" "3.4.9" "4.0.5"; do \
-    if [ "${version}" = "4.0.5" ] ; then \
+  # NOTE: rbenv install does not include the system version 4.0.7.
+  # System version 4.0.7 uses a symbolic link in /usr/local/.
+  && for version in "3.3.12" "3.4.11" "4.0.7"; do \
+    if [ "${version}" = "4.0.7" ] ; then \
       ln -sf "/usr/local/" "${RBENV_ROOT}/versions/${version}" \
       && export RBENV_VERSION="${version}" \
       && install_runtime_gems \
