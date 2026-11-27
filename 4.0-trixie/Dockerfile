@@ -1,5 +1,5 @@
-# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.10-trixie
-# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.10-trixie-arm64
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-3-4.0.10-trixie
+# Multi-architecture image (linux/amd64, linux/arm64). Build with buildx, see README.md.
 FROM ruby:4.0.10-slim-trixie
 
 ENV ROCRO_SETUP_HOME=/opt/ruby
