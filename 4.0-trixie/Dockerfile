@@ -1,6 +1,6 @@
-# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.7-trixie
-# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.7-trixie-arm64
-FROM ruby:4.0.7-slim-trixie
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.10-trixie
+# Docker Hub: conchoid/docker-rbenv:v1.3.2-1-4.0.10-trixie-arm64
+FROM ruby:4.0.10-slim-trixie
 
 ENV ROCRO_SETUP_HOME=/opt/ruby
 ENV RBENV_ROOT=${ROCRO_SETUP_HOME}/rbenv
@@ -43,7 +43,7 @@ RUN RBENV_VERSION="v1.3.2" \
   && rm -rf .git
 
 # install ruby-build
-RUN RUBY_BUILD_VERSION="v20260924" \
+RUN RUBY_BUILD_VERSION="v20261119" \
   && RUBY_BUILD_DIR="${RBENV_ROOT}/plugins/ruby-build" \
   && mkdir -p "${RBENV_ROOT}/plugins" \
   && git clone https://github.com/rbenv/ruby-build.git "${RUBY_BUILD_DIR}" \
@@ -86,10 +86,10 @@ RUN BUNDLER_VERSION="4.0.22" \
     && find "${GEM_DEFAULT_DIR}/gems" -maxdepth 1 -type d -name 'net-imap-*' ! -name "net-imap-${NET_IMAP_VERSION}" -exec rm -rf {} +; \
   } \
   && install_runtime_gems \
-  # NOTE: rbenv install does not include the system version 4.0.7.
-  # System version 4.0.7 uses a symbolic link in /usr/local/.
-  && for version in "3.3.12" "3.4.11" "4.0.7"; do \
-    if [ "${version}" = "4.0.7" ] ; then \
+  # NOTE: rbenv install does not include the system version 4.0.10.
+  # System version 4.0.10 uses a symbolic link in /usr/local/.
+  && for version in "3.3.14" "3.4.13" "4.0.10"; do \
+    if [ "${version}" = "4.0.10" ] ; then \
       ln -sf "/usr/local/" "${RBENV_ROOT}/versions/${version}" \
       && export RBENV_VERSION="${version}" \
       && install_runtime_gems \
